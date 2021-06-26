@@ -8,6 +8,7 @@ if(CRAYPE_VERSION)
         WARNING
           "CRAYPE_LINK_TYPE is set to ${CRAYPE_LINK_TYPE}. Linking is likely to fail unless this is set to 'dynamic'"
       )
+      SET(Kokkos_ENABLE_LIBDL OFF CACHE BOOL "" FORCE)
     endif()
   else()
     message(WARNING "CRAYPE_LINK_TYPE is not set. Linking is likely to fail unless this is set to 'dynamic'")
