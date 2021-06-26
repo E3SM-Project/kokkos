@@ -56,6 +56,7 @@ KOKKOS_ENABLE_OPTION(PROFILING_LOAD_PRINT OFF "Whether to print information abou
 KOKKOS_ENABLE_OPTION(TUNING               OFF "Whether to create bindings for tuning tools")
 KOKKOS_ENABLE_OPTION(AGGRESSIVE_VECTORIZATION OFF "Whether to aggressively vectorize loops")
 KOKKOS_ENABLE_OPTION(LAUNCH_COMPILER      ON  "Whether to potentially use the launch compiler")
+KOKKOS_ENABLE_OPTION(CUDA_ARCH_LINKING    ON  "Whether to add '-arch=sm_XY` to link line")
 
 # This option will go away eventually, but allows fallback to old implementation when needed.
 KOKKOS_ENABLE_OPTION(IMPL_DESUL_ATOMICS   ON  "Whether to use desul based atomics - option only during beta")
