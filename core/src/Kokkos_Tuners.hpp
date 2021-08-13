@@ -99,6 +99,14 @@ struct ValueHierarchyNode;
 
 template <typename ValueType, typename ContainedType>
 struct ValueHierarchyNode {
+/* pgi has trouble linking ValueHierarchyNode with ~vector
+     remove [root,sub]_values for PGI compilers */
+#ifdef __PGI
+  void add_root_value(const ValueType& in) noexcept { }
+  void add_sub_container(const ContainedType& in) { }
+  const ValueType& get_root_value(const size_t index) const { }
+  const ContainedType& get_sub_value(const size_t index) const { }
+#else
   std::vector<ValueType> root_values;
   std::vector<ContainedType> sub_values;
   void add_root_value(const ValueType& in) noexcept {
@@ -111,6 +119,7 @@ struct ValueHierarchyNode {
   const ContainedType& get_sub_value(const size_t index) const {
     return sub_values[index];
   }
+#endif
 };
 
 template <typename ValueType>
