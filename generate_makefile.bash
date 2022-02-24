@@ -504,9 +504,10 @@ else
     STANDARD_CMD=-DCMAKE_CXX_STANDARD=${KOKKOS_CXX_STANDARD}
 fi
 
-if [[ ${COMPILER} == *clang* ]]; then
+if [[ ${COMPILER} == *clang ]]; then
    gcc_path=$(which g++ | awk --field-separator='/bin/g++' '{printf $1}' )
    KOKKOS_CXXFLAGS="${KOKKOS_CXXFLAGS} --gcc-toolchain=${gcc_path}"
+   echo "COMPILER=${COMPILER}, KOKKOS_CXXFLAGS=${KOKKOS_CXXFLAGS}"
 
    if [ ! "${CUDA_PATH}" == "" ]; then
       KOKKOS_CXXFLAGS="${KOKKOS_CXXFLAGS} --cuda-path=${CUDA_PATH}"
