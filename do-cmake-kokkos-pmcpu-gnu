@@ -1,0 +1,16 @@
+#!/bin/bash
+rm -rf CMake*
+SOURCE_DIR=/global/cfs/cdirs/e3sm/software/kokkos/source
+INSTALL_DIR=/global/common/software/e3sm/kokkos/4.2.00/gcc/11.2.0
+
+cmake \
+  -D CMAKE_BUILD_TYPE:STRING=RELEASE \
+  -D CMAKE_CXX_COMPILER=CC \
+  -D CMAKE_INSTALL_PREFIX:PATH=${INSTALL_DIR} \
+  -D BUILD_SHARED_LIBS:BOOL=ON \
+\
+  -D Kokkos_ENABLE_SERIAL:BOOL=ON \
+  -D Kokkos_ARCH_ZEN3:BOOL=ON \
+\
+  ${SOURCE_DIR}
+
