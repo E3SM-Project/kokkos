@@ -1,0 +1,15 @@
+#!/bin/bash
+rm -rf CMake*
+SOURCE_DIR=/lcrc/group/e3sm/soft/kokkos/source
+INSTALL_DIR=/lcrc/group/e3sm/soft/kokkos/4.2.00/gcc/9.2.0
+
+cmake \
+  -D CMAKE_BUILD_TYPE:STRING=RELEASE \
+  -D CMAKE_CXX_COMPILER=${MPICXX} \
+  -D CMAKE_INSTALL_PREFIX:PATH=${INSTALL_DIR} \
+  -D BUILD_SHARED_LIBS:BOOL=ON \
+\
+  -D Kokkos_ENABLE_SERIAL:BOOL=ON \
+  -D Kokkos_ARCH_ZEN2:BOOL=ON \
+\
+  ${SOURCE_DIR}
