@@ -224,6 +224,13 @@ if(KOKKOS_CXX_COMPILER_ID STREQUAL NVIDIA)
   unset(_UPPERCASE_CMAKE_BUILD_TYPE)
 endif()
 
+# Intel ICX (IntelLLVM) is not officially supported as an nvcc host compiler in CUDA 12+.
+# When nvcc_wrapper is used as a RULE_LAUNCH_COMPILE launcher with Intel ICX as host,
+# nvcc's host_config.h rejects it unless --allow-unsupported-compiler is passed.
+if(KOKKOS_CXX_COMPILER_ID STREQUAL NVIDIA AND KOKKOS_CXX_HOST_COMPILER_ID STREQUAL "IntelLLVM")
+  global_append(KOKKOS_CUDA_OPTIONS "--allow-unsupported-compiler")
+endif()
+
 #------------------------------- KOKKOS_HIP_OPTIONS ---------------------------
 kokkos_option(IMPL_AMDGPU_FLAGS "" STRING "Set compiler flags for AMD GPUs")
 kokkos_option(IMPL_AMDGPU_LINK "" STRING "Set linker flags for AMD GPUs")
