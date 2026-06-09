@@ -21,7 +21,12 @@
 #include <cstdint>
 #include <climits>
 
-#if defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)
+// When compiling with nvcc, __CUDACC__ is defined by nvcc's own clang even
+// though Intel LLVM is the host compiler. Intel LLVM 2025.3+ headers included
+// via <immintrin.h> (e.g. AMX/AVX-10.2 intrinsics) use builtins that nvcc's
+// clang does not support, causing compilation failures. Guard against this.
+#if (defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)) && \
+    !defined(__CUDACC__)
 #include <immintrin.h>
 #endif
 
@@ -55,7 +60,8 @@ inline int int_log2_device(unsigned i) {
 KOKKOS_IMPL_HOST_FUNCTION
 inline int int_log2_host(unsigned i) {
 // duplicating shift to avoid unused warning in else branch
-#if defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)
+#if (defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)) && \
+    !defined(__CUDACC__)
   constexpr int shift = sizeof(unsigned) * CHAR_BIT - 1;
   (void)shift;
   return _bit_scan_reverse(i);
@@ -115,7 +121,8 @@ inline int bit_first_zero_device(unsigned i) noexcept {
 KOKKOS_IMPL_HOST_FUNCTION
 inline int bit_first_zero_host(unsigned i) noexcept {
   constexpr unsigned full = ~0u;
-#if defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)
+#if (defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)) && \
+    !defined(__CUDACC__)
   return full != i ? _bit_scan_forward(~i) : -1;
 #elif defined(KOKKOS_COMPILER_CRAYC)
   return full != i ? _popcnt(i ^ (i + 1)) - 1 : -1;
@@ -161,7 +168,8 @@ KOKKOS_IMPL_DEVICE_FUNCTION inline int bit_scan_forward_device(unsigned i) {
 }
 
 KOKKOS_IMPL_HOST_FUNCTION inline int bit_scan_forward_host(unsigned i) {
-#if defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)
+#if (defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)) && \
+    !defined(__CUDACC__)
   return _bit_scan_forward(i);
 #elif defined(KOKKOS_COMPILER_CRAYC)
   return i ? _popcnt(~i & (i - 1)) : -1;
@@ -208,7 +216,8 @@ KOKKOS_IMPL_DEVICE_FUNCTION inline int bit_count_device(unsigned i) {
 }
 
 KOKKOS_IMPL_HOST_FUNCTION inline int bit_count_host(unsigned i) {
-#if defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)
+#if (defined(KOKKOS_COMPILER_INTEL) || defined(KOKKOS_COMPILER_INTEL_LLVM)) && \
+    !defined(__CUDACC__)
   return _popcnt32(i);
 #elif defined(KOKKOS_COMPILER_CRAYC)
   return _popcnt(i);
